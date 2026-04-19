@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenClaw — 它开始长成一个 agent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    /* =====================================================
+       Orange UI Design System — OpenClaw Showcase
+       ===================================================== */
+
+    :root {
+      /* 背景层次 */
+      --bg: #F7F3EC;
+      --bg-secondary: #FBFAF8;
+      --card: #FFFDFA;
+
+      /* 文字层次 */
+      --text: #35322F;
+      --text-secondary: #5E5A55;
+      --text-muted: #8B847C;
+
+      /* 边框与阴影 */
+      --border: #999188;
+      --border-light: #DED8CF;
+      --shadow-color: #B9B2A8;
+
+      /* 品牌强调色 */
+      --primary: #7BCBFF;
+      --accent: #FFE66A;
+      --success: #6FD8C7;
+
+      /* 系统值 */
+      --radius: 4px;
+      --radius-lg: 8px;
+      --radius-full: 9999px;
+      --border-width: 1.5px;
+
+      /* 阴影 */
+      --shadow-sm: 3px 3px 0 0 var(--shadow-color);
+      --shadow: 5px 5px 0 0 var(--shadow-color);
+      --shadow-lg: 7px 7px 0 0 var(--shadow-color);
+
+      /* 间距 */
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-12: 48px;
+      --space-16: 64px;
+      --space-20: 80px;
+
+      /* 动画 */
+      --duration: 200ms;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+      /* 字体 */
+      --font-sans: 'Inter', 'Noto Sans SC', 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* Reset & Base */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      letter-spacing: 0.01em;
+    }
+
+    h1, h2, h3 {
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text);
+    }
+
+    h1 { font-size: clamp(2.5rem, 6vw, 4rem); letter-spacing: -0.04em; }
+    h2 { font-size: clamp(1.75rem, 4vw, 2.5rem); letter-spacing: -0.02em; }
+    h3 { font-size: clamp(1.125rem, 2vw, 1.5rem); }
+
+    p {
+      color: var(--text-secondary);
+      margin-bottom: var(--space-4);
+    }
+
+    /* Layout */
+    section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: var(--space-20) 0;
+      scroll-margin-top: 80px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+      text-align: center;
+    }
+
+    /* Hero */
+    .hero h1 {
+      margin-bottom: var(--space-6);
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.125rem, 2vw, 1.5rem);
+      color: var(--text-secondary);
+      margin-bottom: var(--space-4);
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--space-3);
+      margin-top: var(--space-8);
+    }
+
+    .tag {
+      background: var(--primary);
+      color: #0D0D0D;
+      padding: var(--space-3) var(--space-6);
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      font-weight: 700;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Scene */
+    .scene-title {
+      margin-bottom: var(--space-3);
+    }
+
+    .scene-subtitle {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: var(--space-6);
+    }
+
+    .scene-description {
+      font-size: 1.125rem;
+      line-height: 1.8;
+      margin-bottom: var(--space-8);
+    }
+
+    .highlight {
+      background: var(--accent);
+      color: var(--text);
+      padding: 2px 8px;
+      border-radius: var(--radius);
+      font-weight: 600;
+    }
+
+    /* Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-6);
+      margin-top: var(--space-8);
+    }
+
+    .card {
+      background: var(--card);
+      border: var(--border-width) solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      box-shadow: var(--shadow);
+      transition: box-shadow var(--duration) var(--ease-out);
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+    }
+
+    .card-icon {
+      font-size: 2.5rem;
+      margin-bottom: var(--space-4);
+    }
+
+    .card-title {
+      font-weight: 700;
+      margin-bottom: var(--space-2);
+    }
+
+    .card-text {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Feature List */
+    .feature-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--space-3);
+      margin-top: var(--space-8);
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      background: var(--card);
+      border: var(--border-width) solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--space-3) var(--space-4);
+      box-shadow: var(--shadow-sm);
+      font-weight: 600;
+    }
+
+    .feature-icon {
+      font-size: 1.25rem;
+    }
+
+    /* File Badge */
+    .file-badge {
+      display: inline-block;
+      padding: var(--space-3) var(--space-6);
+      background: var(--primary);
+      color: #0D0D0D;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      font-weight: 900;
+      margin-bottom: var(--space-6);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Process Flow */
+    .process-flow {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: var(--space-3);
+      margin-top: var(--space-8);
+    }
+
+    .process-step {
+      background: var(--card);
+      border: var(--border-width) solid var(--border);
+      border-top: 3px solid var(--primary);
+      border-radius: var(--radius);
+      padding: var(--space-4) var(--space-5);
+      box-shadow: var(--shadow);
+      font-weight: 700;
+      min-width: 120px;
+    }
+
+    .process-arrow {
+      color: var(--primary);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .process-step.success {
+      background: var(--success);
+      border-color: var(--success);
+      color: #0D0D0D;
+    }
+
+    /* Part Divider */
+    .part-divider {
+      text-align: center;
+      padding: var(--space-8) 0;
+    }
+
+    .part-divider h2 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      margin-bottom: var(--space-3);
+    }
+
+    .part-divider p {
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: var(--space-20) 0;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .footer-final {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900;
+      margin-bottom: var(--space-6);
+      letter-spacing: -0.03em;
+    }
+
+    .footer-description {
+      font-size: 1.125rem;
+      max-width: 600px;
+      margin: 0 auto var(--space-8);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      section {
+        padding: var(--space-12) 0;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .process-flow {
+        flex-direction: column;
+      }
+
+      .process-arrow {
+        transform: rotate(90deg);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <h1>它不只是 AI 工具<br>它开始有人格</h1>
+      <div style="text-align: center; margin: 2rem 0;">
+        <img src="openclaw.svg" alt="OpenClaw" style="width: 6rem; height: 6rem; object-fit: contain;">
+      </div>
+      <p class="hero-subtitle">OpenClaw 把人格、记忆、工作方式、主动性和时间感<br>做成了一套可以持续维护的系统</p>
+      <div class="hero-tags">
+        <span class="tag">人格</span>
+        <span class="tag">记忆</span>
+        <span class="tag">工作方式</span>
+        <span class="tag">主动性</span>
+        <span class="tag">时间感</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Part I Title -->
+  <section class="part-divider">
+    <div class="container">
+      <h2>先看能力。再看灵魂。</h2>
+      <p>OpenClaw 能做什么？</p>
+    </div>
+  </section>
+
+  <!-- Scene 1: 真实入口 -->
+  <section>
+    <div class="container">
+      <h2 class="scene-title">进入真实工作入口</h2>
+      <p class="scene-subtitle">它不只活在 IDE 里</p>
+      <p class="scene-description">
+        很多 AI 工具只存在于编辑器里，或者只存在于某个聊天窗口里。<br>
+        但 OpenClaw 更像一个<span class="highlight">网关式的 agent</span>，它可以进入你真正工作的入口。
+      </p>
+      <div class="feature-list">
+        <div class="feature-item">
+          <span class="feature-icon">💬</span>
+          <span>微信</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">🚀</span>
+          <span>飞书</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">🏢</span>
+          <span>企业微信</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scene 2: 真正做事 -->
+  <section>
+    <div class="container">
+      <h2 class="scene-title">不只会回答</h2>
+      <p class="scene-subtitle">它能进入任务现场</p>
+      <p class="scene-description">
+        很多 AI 给人的感觉是懂很多，但主要还是在生成文本。<br>
+        OpenClaw 的不同点在于，它可以<span class="highlight">调用工具</span>。
+      </p>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon">🌐</div>
+          <h3 class="card-title">浏览器</h3>
+          <p class="card-text">检查网页流程、自动化操作</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📁</div>
+          <h3 class="card-title">文件</h3>
+          <p class="card-text">读写文件、整理数据</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">⌨️</div>
+          <h3 class="card-title">命令</h3>
+          <p class="card-text">执行终端命令、运行脚本</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎨</div>
+          <h3 class="card-title">媒体</h3>
+          <p class="card-text">处理图片、音频、视频</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scene 3: 多 Agent -->
+  <section>
+    <div class="container">
+      <h2 class="scene-title">不是一个 bot 换脸</h2>
+      <p class="scene-subtitle">是多个独立 agent</p>
+      <p class="scene-description">
+        很多系统看起来像有很多 agent，但其实只是一个模型在切换 prompt。<br>
+        OpenClaw 可以把不同渠道、不同账号、不同工作区，<span class="highlight">路由到不同 agent</span>。
+      </p>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon">💼</div>
+          <h3 class="card-title">工作 Agent</h3>
+          <p class="card-text">处理工作任务、项目管理</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📚</div>
+          <h3 class="card-title">学习 Agent</h3>
+          <p class="card-text">资料整理、笔记梳理</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🏠</div>
+          <h3 class="card-title">生活 Agent</h3>
+          <p class="card-text">日程提醒、习惯追踪</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scene 4: 持续工作 -->
+  <section>
+    <div class="container">
+      <h2 class="scene-title">不只在你开口时存在</h2>
+      <p class="scene-subtitle">它可以持续工作</p>
+      <p class="scene-description">
+        普通 AI 很像按钮式系统：你按一下，它动一下。<br>
+        OpenClaw 更像一个<span class="highlight">值班中的助手</span>。
+      </p>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon">💓</div>
+          <h3 class="card-title">Heartbeat</h3>
+          <p class="card-text">周期性醒来看看有没有重要事项</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">⏰</div>
+          <h3 class="card-title">Cron</h3>
+          <p class="card-text">在准确时间执行任务</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🤖</div>
+          <h3 class="card-title">Subagents</h3>
+          <p class="card-text">把复杂工作拆开来处理</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Part II Title -->
+  <section class="part-divider">
+    <div class="container">
+      <h2>答案藏在这些文件里</h2>
+      <p>它为什么像一个"活的 agent"？</p>
+    </div>
+  </section>
+
+  <!-- Scene 5: SOUL.md -->
+  <section>
+    <div class="container">
+      <div class="file-badge">SOUL.md</div>
+      <h2 class="scene-title">它是谁</h2>
+      <p class="scene-subtitle">SOUL.md 定义它的人格</p>
+      <p class="scene-description">
+        SOUL.md 不只定义语气（活泼还是冷淡），还定义<span class="highlight">价值观、边界和判断方式</span>。<br>
+        它既定义"它怎么说话"，也定义"它是一个什么样的 agent"。
+      </p>
+      <div class="feature-list">
+        <div class="feature-item">
+          <span class="feature-icon">💬</span>
+          <span>语气</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">🎭</span>
+          <span>性格</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">⚖️</span>
+          <span>价值观</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">🚧</span>
+          <span>边界</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">🧠</span>
+          <span>判断方式</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scene 6: USER.md -->
+  <section>
+    <div class="container">
+      <div class="file-badge">USER.md</div>
+      <h2 class="scene-title">它服务谁</h2>
+      <p class="scene-subtitle">不是抽象用户，是具体的人</p>
+      <p class="scene-description">
+        USER.md 让 agent 面对的不是"一个泛化的人类用户"，<br>
+        而是眼前这个<span class="highlight">具体的人</span>。
+      </p>
+      <div class="feature-list">
+        <div class="feature-item">
+          <span class="feature-icon">❤️</span>
+          <span>偏好</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">📅</span>
+          <span>习惯</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">🌍</span>
+          <span>时区</span>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">🎯</span>
+          <span>目标</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scene 7: MEMORY.md -->
+  <section>
+    <div class="container">
+      <div class="file-badge">MEMORY.md</div>
+      <h2 class="scene-title">它怎么记住</h2>
+      <p class="scene-subtitle">记忆不是悬空的，是写下来的</p>
+      <p class="scene-description">
+        OpenClaw 的记忆不是"模型突然想起来了"，<br>
+        而是"系统把值得记住的东西<span class="highlight">认真写下来了</span>"。
+      </p>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon">📚</div>
+          <h3 class="card-title">MEMORY.md</h3>
+          <p class="card-text">长期记忆，记录真正值得留下的事实、偏好和判断</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📝</div>
+          <h3 class="card-title">Daily Logs</h3>
+          <p class="card-text">按日期记录的工作笔记和上下文流水</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scene 8: AGENTS.md -->
+  <section>
+    <div class="container">
+      <div class="file-badge">AGENTS.md</div>
+      <h2 class="scene-title">它怎么工作</h2>
+      <p class="scene-subtitle">把前面三者串起来</p>
+      <p class="scene-description">
+        AGENTS.md 规定这个 agent 平时怎么运行：<br>
+        每次启动前要读什么，哪些事情可以直接做，哪些事情必须先确认。
+      </p>
+      <div class="process-flow">
+        <div class="process-step">SOUL</div>
+        <span class="process-arrow">→</span>
+        <div class="process-step">USER</div>
+        <span class="process-arrow">→</span>
+        <div class="process-step">MEMORY</div>
+        <span class="process-arrow">→</span>
+        <div class="process-step success">Ready</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scene 9: HEARTBEAT.md + Cron -->
+  <section>
+    <div class="container">
+      <div class="file-badge">HEARTBEAT + Cron</div>
+      <h2 class="scene-title">它的主动性</h2>
+      <p class="scene-subtitle">人格开始参与时间</p>
+      <p class="scene-description">
+        这是 OpenClaw 最有 agent 味的设计之一。<br>
+        系统会定期把它叫醒，让它看一眼当前局面。
+      </p>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon">💓</div>
+          <h3 class="card-title">Heartbeat</h3>
+          <p class="card-text">持续关注，没事就安静，有事才出手</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">⏰</div>
+          <h3 class="card-title">Cron</h3>
+          <p class="card-text">精确调度，比如每天 08:00 发晨报</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Part III Title -->
+  <section class="part-divider">
+    <div class="container">
+      <h2>然后遇见了 Hermes</h2>
+      <div style="text-align: center; margin: 2rem 0;">
+        <img src="hermes-agent-nousresearch.png" alt="Hermes" style="width: 6rem; height: 6rem; object-fit: contain;">
+      </div>
+      <p>它不只是配置好的 agent，它会自我迭代</p>
+    </div>
+  </section>
+
+  <!-- Scene 10: Hermes 自我迭代 -->
+  <section>
+    <div class="container">
+      <h2 class="scene-title">OpenClaw 提供能力<br>Hermes 会自动进化</h2>
+      <p class="scene-subtitle">关键差异：Built-in Learning Loop</p>
+      <p class="scene-description">
+        OpenClaw 给 agent 提供了改写自己 SOUL.md 的<strong>能力</strong>——但需要 agent 在对话中主动判断"我该更新记忆了"。<br>
+        Hermes 在这个基础上，增加了一个关键能力：<span class="highlight">系统化的自我迭代机制</span>。
+      </p>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon">🔄</div>
+          <h3 class="card-title">内置学习循环</h3>
+          <p class="card-text" style="margin-bottom: 1rem; font-weight: 500;">一次踩坑，长期避坑</p>
+          <p class="card-text">第一次去某家餐厅，发现周末排队要等2小时。Hermes自动记住这个规律。下次你想去那家吃饭，它会提前提醒你"要么避开周末，要么先拿号"。</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔍</div>
+          <h3 class="card-title">跨会话学习</h3>
+          <p class="card-text" style="margin-bottom: 1rem; font-weight: 500;">记住你的偏好</p>
+          <p class="card-text">上个月你说过"喝咖啡不加糖"。今天路过咖啡店，Hermes自动搜索历史记忆，直接给你点一杯不加糖的拿铁，不用你重复说。</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🚀</div>
+          <h3 class="card-title">自动技能创建</h3>
+          <p class="card-text" style="margin-bottom: 1rem; font-weight: 500;">主动发现规律</p>
+          <p class="card-text">发现某个APP在晚上8点抢券成功率最高后，Hermes主动记住这个时间规律。以后抢券任务都自动在最佳时间执行，不用你反复试错。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scene 11: 对比总结 -->
+  <section>
+    <div class="container">
+      <h2 class="scene-title">两个层次的 agent 系统</h2>
+      <p class="scene-subtitle">不是替代，是进化</p>
+      <div class="cards-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+        <div class="card" style="border-top: 3px solid var(--primary);">
+          <div class="card-icon"><img src="openclaw.svg" alt="OpenClaw" style="width: 3rem; height: 3rem; object-fit: contain;"></div>
+          <h3 class="card-title">OpenClaw</h3>
+          <p class="card-text" style="margin-bottom: var(--space-4);"><strong>提供能力的框架</strong></p>
+          <p class="card-text">✓ 人格化系统（SOUL.md）</p>
+          <p class="card-text">✓ 持久记忆（MEMORY.md）</p>
+          <p class="card-text">✓ 多 agent 路由</p>
+          <p class="card-text">✓ 工具系统（可改写文件）</p>
+          <p class="card-text">✓ 主动性和时间感</p>
+          <p class="card-text" style="margin-top: var(--space-4); color: var(--text-muted);">静态配置，依赖 agent 主动判断</p>
+        </div>
+        <div class="card" style="border-top: 3px solid var(--accent); background: linear-gradient(135deg, var(--card) 0%, rgba(255, 230, 106, 0.1) 100%);">
+          <div class="card-icon"><img src="hermes-agent-nousresearch.png" alt="Hermes" style="width: 3rem; height: 3rem; object-fit: contain;"></div>
+          <h3 class="card-title">Hermes</h3>
+          <p class="card-text" style="margin-bottom: var(--space-4);"><strong>会进化的系统</strong></p>
+          <p class="card-text">✓ 所有 OpenClaw 能力</p>
+          <p class="card-text">✓ Built-in learning loop</p>
+          <p class="card-text">✓ 自动创建和改进 skills</p>
+          <p class="card-text">✓ 跨会话学习和记忆</p>
+          <p class="card-text">✓ 主动知识持久化（nudges）</p>
+          <p class="card-text" style="margin-top: var(--space-4); color: var(--text-secondary);">动态成长，越用越聪明</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <h2 class="footer-final">它不只是 AI<br>它会变成更好的自己</h2>
+      <p class="footer-description">
+        Hermes 继承了 OpenClaw 的<span class="highlight">人格</span>、<span class="highlight">记忆</span>和<span class="highlight">主动性</span>，<br>
+        并增加了<span class="highlight">自我迭代</span>能力。<br>
+        不只是一次性配置的 agent，而是会随着使用<span class="highlight">持续进化</span>的系统。
+      </p>
+      <div style="margin-top: var(--space-8);">
+        <span class="tag" style="font-size: 1.125rem; padding: var(--space-4) var(--space-8);">An agent that improves itself</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

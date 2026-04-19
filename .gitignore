@@ -1,0 +1,17 @@
+.DS_Store
+*.md
+!README.md
+*.mp4
+*.gif
+index.html
+openclaw-preview.gif
+openclaw-remotion-demo.mp4
+openclaw-remotion-full.mp4
+openclaw-remotion-full-compressed.mp4
+openclaw-showcase.html
+html-structure-v2.md
+narration-script.md
+openclaw-detailed-guide.md
+remotion-storyboard-v2.md
+screen-copy.md
+assets/
