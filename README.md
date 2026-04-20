@@ -4,7 +4,7 @@ OpenClaw vs Hermes 的介绍页面 - 从 AI 工具到有人格的 Agent，再到
 
 ## 访问
 
-部署地址：[待更新]
+部署地址：https://openclaw-explainer-pi.vercel.app
 
 ## 本地运行
 
